@@ -16,6 +16,7 @@ module Jenkins
       @proxy = args['INPUT_PROXY']
       @job_name = args['INPUT_JOB_NAME']
       @job_params = JSON.parse(args['INPUT_JOB_PARAMS'] || '{}')
+      @jenkins_headers = JSON.parse(args['INPUT_JENKINS_HEADERS'] || '{}')
       @job_timeout = args['INPUT_JOB_TIMEOUT'] || DEFAULT_TIMEOUT
       @async_mode = args['INPUT_ASYNC'].to_s == 'true'
     end
@@ -38,7 +39,7 @@ module Jenkins
 
     def perform_request(url, method = :get, **args)
       payload = args.delete(:payload)
-      response = RestClient::Request.execute method: method, url: url, payload: payload, user: jenkins_user, password: jenkins_token, proxy: proxy, args: args
+      response = RestClient::Request.execute method: method, url: url, payload: payload, user: jenkins_user, password: jenkins_token, args: args, headers: jenkins_headers
       response_code = response.code
       raise "Error on #{method} to #{url} [#{response_code}]" unless (200..299).include? response_code
       response
