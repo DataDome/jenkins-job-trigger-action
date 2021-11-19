@@ -10,7 +10,7 @@ module Jenkins
     INTERVAL_SECONDS = 10
 
     def initialize(args)
-      @jenkins_url = args['INPUT_JENKINS_URL'].sub(/^https?\:\/\//,'').chomp('/')
+      @jenkins_url = URI.encode(args['INPUT_JENKINS_URL'].chomp('/'))
       @jenkins_user = args['INPUT_JENKINS_USER']
       @jenkins_token = args['INPUT_JENKINS_TOKEN']
       @proxy = args['INPUT_PROXY']
